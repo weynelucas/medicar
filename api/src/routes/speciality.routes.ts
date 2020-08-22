@@ -2,7 +2,7 @@ import { Router } from 'express';
 import CreateSpecialityDto from '../dtos/CreateSpecialityDto';
 import { NotFound } from '../errors/apiErrors';
 import Speciality from '../models/Speciality';
-import { validateAndConvert } from '../utils';
+import { transformAndValidate } from '../utils';
 
 const specialitiesRouter = Router();
 
@@ -13,9 +13,9 @@ specialitiesRouter.get('/', async (request, response) => {
 });
 
 specialitiesRouter.post('/', async (request, response) => {
-  const createDto = await validateAndConvert(CreateSpecialityDto, request.body);
+  const dto = await transformAndValidate(CreateSpecialityDto, request.body);
 
-  const speciality = Speciality.create(createDto);
+  const speciality = Speciality.create(dto);
   await speciality.save();
 
   return response.status(201).json(speciality);

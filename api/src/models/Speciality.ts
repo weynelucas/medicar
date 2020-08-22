@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import Doctor from './Doctor';
 
 @Entity('speciality')
 class Speciality extends BaseEntity {
@@ -7,6 +14,9 @@ class Speciality extends BaseEntity {
 
   @Column()
   name: string;
+
+  @OneToMany(type => Doctor, doctor => doctor.speciality)
+  doctors: Doctor[];
 }
 
 export default Speciality;

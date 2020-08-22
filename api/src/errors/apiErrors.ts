@@ -76,6 +76,11 @@ class NotFound extends APIError {
   defaultDetail = 'Not found.';
 }
 
+class ServiceError extends APIError {
+  statusCode = 409;
+  defaultDetail = 'Conflict.';
+}
+
 export {
   APIError,
   ValidationError,
@@ -83,4 +88,5 @@ export {
   NotAuthenticated,
   PermissionDenied,
   NotFound,
+  ServiceError,
 };
