@@ -11,7 +11,7 @@ function apiErrorHandler(
     return response.status(err.statusCode).json(err.json());
   }
 
-  next();
+  return next();
 }
 
 export default apiErrorHandler;
