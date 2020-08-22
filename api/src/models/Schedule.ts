@@ -4,9 +4,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import Doctor from './Doctor';
+import ScheduleTime from './ScheduleTime';
 
 @Entity('schedule')
 class Schedule extends BaseEntity {
@@ -22,6 +24,9 @@ class Schedule extends BaseEntity {
   @ManyToOne(() => Doctor, doctor => doctor.schedules)
   @JoinColumn({ name: 'doctor_id' })
   doctor: Doctor;
+
+  @OneToMany(() => ScheduleTime, scheduleTime => scheduleTime.schedule)
+  times: ScheduleTime[];
 }
 
 export default Schedule;

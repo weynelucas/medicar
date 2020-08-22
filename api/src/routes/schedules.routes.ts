@@ -7,7 +7,9 @@ import { transformAndValidate } from '../utils';
 const schedulesRouter = Router();
 
 schedulesRouter.get('/', async (request, response) => {
-  const schedules = await Schedule.find({ relations: ['doctor'] });
+  const schedules = await Schedule.find({
+    relations: ['doctor', 'doctor.speciality', 'times'],
+  });
 
   return response.json(schedules);
 });

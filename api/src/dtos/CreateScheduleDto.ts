@@ -1,5 +1,13 @@
 import { Expose } from 'class-transformer';
-import { IsDateString, IsDefined, IsInt } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  ArrayUnique,
+  IsDateString,
+  IsDefined,
+  IsInt,
+  IsMilitaryTime,
+} from 'class-validator';
+
 class CreateScheduleDto {
   @Expose()
   @IsInt()
@@ -10,6 +18,13 @@ class CreateScheduleDto {
   @IsDateString()
   @IsDefined()
   date: string;
+
+  @Expose()
+  @IsMilitaryTime({ each: true })
+  @ArrayUnique()
+  @ArrayNotEmpty()
+  @IsDefined()
+  times: string[];
 }
 
 export default CreateScheduleDto;

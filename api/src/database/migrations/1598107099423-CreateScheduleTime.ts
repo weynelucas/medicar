@@ -5,11 +5,11 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateSchedule1598099747471 implements MigrationInterface {
+export class CreateScheduleTime1598107099423 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'schedule',
+        name: 'schedule_time',
         columns: [
           {
             name: 'id',
@@ -18,11 +18,15 @@ export class CreateSchedule1598099747471 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'date',
-            type: 'date',
+            name: 'time',
+            type: 'time',
           },
           {
-            name: 'doctor_id',
+            name: 'is_available',
+            type: 'boolean',
+          },
+          {
+            name: 'schedule_id',
             type: 'int',
           },
         ],
@@ -30,11 +34,11 @@ export class CreateSchedule1598099747471 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      'schedule',
+      'schedule_time',
       new TableForeignKey({
-        name: 'schedule_doctor_id_fk',
-        referencedTableName: 'doctor',
-        columnNames: ['doctor_id'],
+        name: 'schedule_time_schedule_id_fk',
+        referencedTableName: 'schedule',
+        columnNames: ['schedule_id'],
         referencedColumnNames: ['id'],
         onDelete: 'CASCADE',
       }),
@@ -42,6 +46,6 @@ export class CreateSchedule1598099747471 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('schedule');
+    await queryRunner.dropTable('schedule_time');
   }
 }
