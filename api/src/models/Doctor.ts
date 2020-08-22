@@ -4,8 +4,10 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import Schedule from './Schedule';
 import Speciality from './Speciality';
 
 @Entity()
@@ -28,9 +30,12 @@ class Doctor extends BaseEntity {
   @Column({ name: 'speciality_id' })
   specialityId: number;
 
-  @ManyToOne(type => Speciality, speciality => speciality.doctors)
+  @ManyToOne(() => Speciality, speciality => speciality.doctors)
   @JoinColumn({ name: 'speciality_id' })
   speciality: Speciality;
+
+  @OneToMany(() => Schedule, schedule => schedule.doctor)
+  schedules: Schedule[];
 }
 
 export default Doctor;

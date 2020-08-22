@@ -1,3 +1,3 @@
-import { transformAndValidate } from './transformAndValidate';
+import transformAndValidate from './transformAndValidate';
 
 export { transformAndValidate };

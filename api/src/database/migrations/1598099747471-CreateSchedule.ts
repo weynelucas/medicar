@@ -5,36 +5,23 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateDoctor1597933650301 implements MigrationInterface {
+export class CreateSchedule1598099747471 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'doctor',
+        name: 'schedule',
         columns: [
           {
             name: 'id',
             type: 'int',
-            isPrimary: true,
             generationStrategy: 'increment',
           },
           {
-            name: 'name',
-            type: 'varchar',
+            name: 'date',
+            type: 'date',
           },
           {
-            name: 'crm',
-            type: 'int',
-          },
-          {
-            name: 'email',
-            type: 'varchar',
-          },
-          {
-            name: 'phone',
-            type: 'varchar',
-          },
-          {
-            name: 'speciality_id',
+            name: 'doctor_id',
             type: 'int',
           },
         ],
@@ -42,17 +29,18 @@ export class CreateDoctor1597933650301 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      'doctor',
+      'schedule',
       new TableForeignKey({
-        name: 'doctor_speciality_id_fk',
-        referencedTableName: 'speciality',
-        columnNames: ['speciality_id'],
+        name: 'schedule_doctor_id_fk',
+        referencedTableName: 'doctor',
+        columnNames: ['doctor_id'],
         referencedColumnNames: ['id'],
+        onDelete: 'CASCADE',
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('doctor');
+    await queryRunner.dropTable('schedule');
   }
 }

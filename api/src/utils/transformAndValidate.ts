@@ -1,4 +1,4 @@
-import { plainToClass, plainToClassFromExist } from 'class-transformer';
+import { plainToClass } from 'class-transformer';
 import { ClassType } from 'class-transformer/ClassTransformer';
 import { validate } from 'class-validator';
 import { ValidationError } from '../errors/apiErrors';
@@ -23,17 +23,4 @@ async function transformAndValidate<T>(
   return clsObject;
 }
 
-async function transformAndValidateFromExist<T>(
-  clsObject: T,
-  plain: object,
-): Promise<T> {
-  const mixedClsObject = plainToClassFromExist(clsObject, plain, {
-    excludeExtraneousValues: true,
-  });
-
-  await validateClsObject(mixedClsObject);
-
-  return mixedClsObject;
-}
-
-export { transformAndValidate, transformAndValidateFromExist };
+export default transformAndValidate;
