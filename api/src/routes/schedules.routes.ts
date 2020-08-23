@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import CreateScheduleDto from '../dtos/CreateScheduleDto';
+import FilterScheduleDto from '../dtos/FilterScheduleDto';
 import Schedule from '../models/Schedule';
 import CreateScheduleService from '../services/CreateScheduleService';
 import { transformAndValidate } from '../utils';
@@ -7,9 +8,8 @@ import { transformAndValidate } from '../utils';
 const schedulesRouter = Router();
 
 schedulesRouter.get('/', async (request, response) => {
-  const schedules = await Schedule.find({
-    relations: ['doctor', 'doctor.speciality', 'times'],
-  });
+  const filter = await transformAndValidate(FilterScheduleDto, request.query);
+  const schedules = await Schedule.findAvailables(filter);
 
   return response.json(schedules);
 });

@@ -14,7 +14,7 @@ class CreateScheduleService {
   public async execute({ doctorId, date, times }: Request): Promise<Schedule> {
     const doctor = await Doctor.findOne(doctorId);
     if (!doctor) {
-      throw new ServiceError(`Speciality with id=${doctorId} not found.`);
+      throw new ServiceError(`Doctor with id=${doctorId} not found.`);
     }
 
     const today = new Date();
@@ -47,22 +47,22 @@ class CreateScheduleService {
 
     if (isSomeTimePast) {
       throw new ServiceError(
-        'Cannot create schedules for past times of today.',
+        'Cannot create schedules for past times for this date.',
       );
     }
 
     const schedule = Schedule.create({ doctor, date });
     await schedule.save();
 
-    const scheduleTimes = times.map(time => {
+    const timeInstances = times.map(time => {
       return ScheduleTime.create({
-        schedule,
         time,
         isAvaialble: true,
+        scheduleId: schedule.id,
       });
     });
 
-    await ScheduleTime.save(scheduleTimes);
+    schedule.times = await ScheduleTime.save(timeInstances);
 
     return schedule;
   }
