@@ -2,11 +2,11 @@ import { Expose } from 'class-transformer';
 import {
   ArrayNotEmpty,
   ArrayUnique,
-  IsDateString,
   IsDefined,
   IsInt,
   IsMilitaryTime,
 } from 'class-validator';
+import IsDateFormatString from '../validation/IsDateFormatString';
 
 class CreateScheduleDto {
   @Expose()
@@ -15,7 +15,7 @@ class CreateScheduleDto {
   doctorId: number;
 
   @Expose()
-  @IsDateString()
+  @IsDateFormatString('yyyy-MM-dd')
   @IsDefined()
   date: string;
 
