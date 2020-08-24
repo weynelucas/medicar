@@ -19,7 +19,9 @@ class Speciality extends BaseEntity {
   doctors: Doctor[];
 
   static findByName(name?: string): Promise<Speciality[]> {
-    var query = this.createQueryBuilder('speciality');
+    var query = this.createQueryBuilder('speciality').orderBy({
+      'speciality.name': 'ASC',
+    });
 
     if (name) {
       query = query.where('speciality.name ILIKE :name', { name: `%${name}%` });

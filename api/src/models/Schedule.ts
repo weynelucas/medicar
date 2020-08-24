@@ -43,23 +43,23 @@ class Schedule extends BaseEntity {
     dateAfter,
     dateBefore,
   }: FilterScheduleOptions) {
-    var query = this.getAvailblesQuery();
+    const query = this.getAvailblesQuery();
 
     // Filtering
     if (doctor) {
-      query = query.andWhere('doctor.id = :doctor', { doctor });
+      query.andWhere('doctor.id = :doctor', { doctor });
     }
 
     if (speciality) {
-      query = query.andWhere('speciality.id = :speciality', { speciality });
+      query.andWhere('speciality.id = :speciality', { speciality });
     }
 
     if (dateAfter) {
-      query = query.andWhere('schedule.date >= :dateAfter', { dateAfter });
+      query.andWhere('schedule.date >= :dateAfter', { dateAfter });
     }
 
     if (dateBefore) {
-      query = query.andWhere('schedule.date <= :dateBefore', { dateBefore });
+      query.andWhere('schedule.date <= :dateBefore', { dateBefore });
     }
 
     return query.getMany();

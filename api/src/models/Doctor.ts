@@ -55,11 +55,8 @@ class Doctor extends BaseEntity {
     if (search) {
       query = query.andWhere(
         new Brackets(qb => {
-          qb.where('doctor.name ILIKE :search', {
-            search: `%${search}%`,
-          }).orWhere('doctor.email ILIKE :search', {
-            search: `%${search}%`,
-          });
+          qb.where('doctor.name ILIKE :search', { search: `%${search}%` });
+          qb.orWhere('doctor.email ILIKE :search', { search: `%${search}%` });
 
           if (Number.isInteger(Number(search))) {
             qb.orWhere('doctor.crm = :search', { search });
