@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   BaseEntity,
   Brackets,
@@ -13,7 +14,7 @@ import Speciality from './Speciality';
 
 interface FilterDoctorOptions {
   search?: string;
-  speciality?: string;
+  speciality?: string[];
 }
 
 @Entity()
@@ -33,6 +34,7 @@ class Doctor extends BaseEntity {
   @Column()
   phone: string;
 
+  @Exclude()
   @Column({ name: 'speciality_id' })
   specialityId: number;
 
@@ -47,13 +49,13 @@ class Doctor extends BaseEntity {
     search,
     speciality,
   }: FilterDoctorOptions): Promise<Doctor[]> {
-    var query = this.createQueryBuilder('doctor').leftJoinAndSelect(
+    const query = this.createQueryBuilder('doctor').leftJoinAndSelect(
       'doctor.speciality',
       'speciality',
     );
 
     if (search) {
-      query = query.andWhere(
+      query.andWhere(
         new Brackets(qb => {
           qb.where('doctor.name ILIKE :search', { search: `%${search}%` });
           qb.orWhere('doctor.email ILIKE :search', { search: `%${search}%` });
@@ -65,8 +67,8 @@ class Doctor extends BaseEntity {
       );
     }
 
-    if (speciality) {
-      query = query.andWhere('speciality.id = :speciality', { speciality });
+    if (speciality?.length) {
+      query.andWhere('speciality.id IN (:...speciality)', { speciality });
     }
 
     return query.getMany();

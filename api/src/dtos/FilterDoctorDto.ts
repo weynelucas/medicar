@@ -1,5 +1,6 @@
-import { Expose } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 import { IsNumberString, IsOptional } from 'class-validator';
+import { ensureArray } from '../utils';
 
 class FilterDoctorDto {
   @Expose()
@@ -7,9 +8,10 @@ class FilterDoctorDto {
   search?: string;
 
   @Expose()
-  @IsNumberString({ no_symbols: true })
+  @IsNumberString({ no_symbols: true }, { each: true })
+  @Transform(value => ensureArray(value))
   @IsOptional()
-  speciality: string;
+  speciality: string[];
 }
 
 export default FilterDoctorDto;

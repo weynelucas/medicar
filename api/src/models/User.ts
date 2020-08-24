@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import authConfig from '../config/auth';
 
 @Entity('account_user')
 class User extends BaseEntity {
@@ -35,7 +36,7 @@ class User extends BaseEntity {
   updatedAt: Date;
 
   public async setPassword(password: string): Promise<void> {
-    this.password = await hash(password, 8);
+    this.password = await hash(password, authConfig.salt);
   }
 
   public async updateLastLogin(): Promise<void> {

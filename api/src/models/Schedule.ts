@@ -1,3 +1,4 @@
+import { Exclude, Expose, Transform } from 'class-transformer';
 import { format, startOfSecond } from 'date-fns';
 import {
   BaseEntity,
@@ -13,8 +14,8 @@ import Doctor from './Doctor';
 import ScheduleTime from './ScheduleTime';
 
 interface FilterScheduleOptions {
-  doctor?: string;
-  speciality?: string;
+  doctor?: string[];
+  speciality?: string[];
   dateAfter?: string;
   dateBefore?: string;
 }
@@ -27,6 +28,7 @@ class Schedule extends BaseEntity {
   @Column()
   date: Date;
 
+  @Exclude()
   @Column({ name: 'doctor_id' })
   doctorId: number;
 
@@ -34,6 +36,8 @@ class Schedule extends BaseEntity {
   @JoinColumn({ name: 'doctor_id' })
   doctor: Doctor;
 
+  @Expose({ toPlainOnly: true })
+  @Transform((value: ScheduleTime[]) => value.map(time => time.time))
   @OneToMany(() => ScheduleTime, scheduleTime => scheduleTime.schedule)
   times: ScheduleTime[];
 
@@ -46,12 +50,12 @@ class Schedule extends BaseEntity {
     const query = this.getAvailblesQuery();
 
     // Filtering
-    if (doctor) {
-      query.andWhere('doctor.id = :doctor', { doctor });
+    if (doctor?.length) {
+      query.andWhere('doctor.id IN (:...doctor)', { doctor });
     }
 
-    if (speciality) {
-      query.andWhere('speciality.id = :speciality', { speciality });
+    if (speciality?.length) {
+      query.andWhere('speciality.id IN (:...speciality)', { speciality });
     }
 
     if (dateAfter) {
