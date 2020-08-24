@@ -1,4 +1,4 @@
-import { hashSync } from 'bcryptjs';
+import { hash } from 'bcryptjs';
 import {
   BaseEntity,
   Column,
@@ -31,8 +31,13 @@ class User extends BaseEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  public setPassword(password: string): void {
-    this.password = hashSync(password, 8);
+  public async setPassword(password: string): Promise<void> {
+    this.password = await hash(password, 8);
+  }
+
+  public async updateLastLogin(): Promise<void> {
+    this.lastLogin = new Date();
+    await this.save();
   }
 }
 

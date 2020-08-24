@@ -18,7 +18,7 @@ class CreateUserService {
     }
 
     const user = User.create({ name, email });
-    user.setPassword(password);
+    await user.setPassword(password);
     await user.save();
 
     return user;
