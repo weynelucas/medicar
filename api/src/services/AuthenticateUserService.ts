@@ -1,5 +1,6 @@
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+import authConfig from '../config/auth';
 import { AuthenticationFailed } from '../errors/apiErrors';
 import User from '../models/User';
 
@@ -29,7 +30,7 @@ class AuthenticateUserService {
 
     await user.updateLastLogin();
 
-    const token = sign({}, 'bd8ea156f417dc88ba0b5bf6772bf06f', {
+    const token = sign({ isAdmin: user.isAdmin }, authConfig.jwt.secretKey, {
       subject: user.id.toString(),
       expiresIn: '1d',
     });

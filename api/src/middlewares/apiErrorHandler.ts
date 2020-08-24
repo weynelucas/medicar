@@ -11,7 +11,7 @@ function apiErrorHandler(
     return response.status(err.statusCode).json(err.json());
   }
 
-  return response.status(500).send(err.stack);
+  return next(err);
 }
 
 export default apiErrorHandler;
