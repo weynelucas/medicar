@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import CreateDoctorDto from '../dtos/CreatDoctorDto';
+import FilterDoctorDto from '../dtos/FilterDoctorDto';
 import { NotFound } from '../errors/apiErrors';
 import Doctor from '../models/Doctor';
 import CreateDoctorService from '../services/CreateDoctorService';
@@ -8,7 +9,14 @@ import { transformAndValidate } from '../utils';
 const doctorsRouter = Router();
 
 doctorsRouter.get('/', async (request, response) => {
-  const doctors = await Doctor.find({ relations: ['speciality'] });
+  const { search, speciality } = await transformAndValidate(
+    FilterDoctorDto,
+    request.query,
+  );
+  const doctors = await Doctor.findBySearchAndSpeciality({
+    search,
+    speciality,
+  });
 
   return response.json(doctors);
 });

@@ -15,8 +15,18 @@ class Speciality extends BaseEntity {
   @Column()
   name: string;
 
-  @OneToMany(type => Doctor, doctor => doctor.speciality)
+  @OneToMany(() => Doctor, doctor => doctor.speciality)
   doctors: Doctor[];
+
+  static findByName(name?: string): Promise<Speciality[]> {
+    var query = this.createQueryBuilder('speciality');
+
+    if (name) {
+      query = query.where('speciality.name ILIKE :name', { name: `%${name}%` });
+    }
+
+    return query.getMany();
+  }
 }
 
 export default Speciality;

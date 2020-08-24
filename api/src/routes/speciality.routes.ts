@@ -7,7 +7,8 @@ import { transformAndValidate } from '../utils';
 const specialitiesRouter = Router();
 
 specialitiesRouter.get('/', async (request, response) => {
-  const results = await Speciality.find();
+  const { search = '' } = request.query;
+  const results = await Speciality.findByName(search.toString());
 
   return response.json(results);
 });

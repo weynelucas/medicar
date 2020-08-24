@@ -4,12 +4,12 @@ import IsDateFormatString from '../validation/IsDateFormatString';
 
 class FilterScheduleDto {
   @Expose()
-  @IsNumberString()
+  @IsNumberString({ no_symbols: true })
   @IsOptional()
   doctor?: string;
 
   @Expose()
-  @IsNumberString()
+  @IsNumberString({ no_symbols: true })
   @IsOptional()
   speciality?: string;
 
