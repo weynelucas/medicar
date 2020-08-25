@@ -1,4 +1,5 @@
 import { hash } from 'bcryptjs';
+import { Exclude, Expose } from 'class-transformer';
 import {
   BaseEntity,
   Column,
@@ -7,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import authConfig from '../config/auth';
 
 @Entity('account_user')
 class User extends BaseEntity {
@@ -19,6 +21,7 @@ class User extends BaseEntity {
   @Column()
   email: string;
 
+  @Exclude()
   @Column()
   password: string;
 
@@ -28,14 +31,16 @@ class User extends BaseEntity {
   @Column({ name: 'last_login', nullable: true })
   lastLogin?: Date;
 
+  @Expose({ name: 'dateJoined' })
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
   public async setPassword(password: string): Promise<void> {
-    this.password = await hash(password, 8);
+    this.password = await hash(password, authConfig.salt);
   }
 
   public async updateLastLogin(): Promise<void> {

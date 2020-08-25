@@ -1,3 +1,4 @@
+import { classToPlain } from 'class-transformer';
 import { Router } from 'express';
 import AuthenticateUserDto from '../dtos/AuthenticateUserDto';
 import AuthenticateUserService from '../services/AuthenticateUserService';
@@ -14,9 +15,7 @@ sessionsRouter.post('/login', async (request, response) => {
   const authService = new AuthenticateUserService();
   const { user, token } = await authService.execute({ email, password });
 
-  delete user.password;
-
-  return response.json({ user, token });
+  return response.json({ user: classToPlain(user), token });
 });
 
 export default sessionsRouter;

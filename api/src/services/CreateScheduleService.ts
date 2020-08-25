@@ -12,7 +12,9 @@ interface Request {
 
 class CreateScheduleService {
   public async execute({ doctorId, date, times }: Request): Promise<Schedule> {
-    const doctor = await Doctor.findOne(doctorId);
+    const doctor = await Doctor.findOne(doctorId, {
+      relations: ['speciality'],
+    });
     if (!doctor) {
       throw new ServiceError(`Doctor with id=${doctorId} not found.`);
     }

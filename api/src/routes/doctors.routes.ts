@@ -1,3 +1,4 @@
+import { classToPlain } from 'class-transformer';
 import { Router } from 'express';
 import CreateDoctorDto from '../dtos/CreatDoctorDto';
 import FilterDoctorDto from '../dtos/FilterDoctorDto';
@@ -13,12 +14,13 @@ doctorsRouter.get('/', async (request, response) => {
     FilterDoctorDto,
     request.query,
   );
+
   const doctors = await Doctor.findBySearchAndSpeciality({
     search,
     speciality,
   });
 
-  return response.json(doctors);
+  return response.json(classToPlain(doctors));
 });
 
 doctorsRouter.post('/', async (request, response) => {
@@ -26,7 +28,7 @@ doctorsRouter.post('/', async (request, response) => {
   const doctorService = new CreateDoctorService();
   const doctor = await doctorService.execute(dto);
 
-  return response.status(201).json(doctor);
+  return response.status(201).json(classToPlain(doctor));
 });
 
 doctorsRouter.delete('/:id', async (request, response) => {

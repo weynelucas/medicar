@@ -1,3 +1,4 @@
+import { classToPlain } from 'class-transformer';
 import { Router } from 'express';
 import CreateScheduleDto from '../dtos/CreateScheduleDto';
 import FilterScheduleDto from '../dtos/FilterScheduleDto';
@@ -11,7 +12,7 @@ schedulesRouter.get('/', async (request, response) => {
   const filter = await transformAndValidate(FilterScheduleDto, request.query);
   const schedules = await Schedule.findAvailables(filter);
 
-  return response.json(schedules);
+  return response.json(classToPlain(schedules));
 });
 
 schedulesRouter.post('/', async (request, response) => {
@@ -19,7 +20,7 @@ schedulesRouter.post('/', async (request, response) => {
   const scheduleService = new CreateScheduleService();
   const schedule = await scheduleService.execute(dto);
 
-  return response.status(201).json(schedule);
+  return response.status(201).json(classToPlain(schedule));
 });
 
 export default schedulesRouter;
