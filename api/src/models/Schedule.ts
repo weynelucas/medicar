@@ -1,5 +1,5 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
-import { format, startOfSecond } from 'date-fns';
+import { format, isEqual, parse, startOfSecond } from 'date-fns';
 import {
   BaseEntity,
   Column,
@@ -41,6 +41,19 @@ class Schedule extends BaseEntity {
   @OneToMany(() => ScheduleTime, scheduleTime => scheduleTime.schedule)
   times: ScheduleTime[];
 
+  public getScheduleTime(time: string): ScheduleTime | undefined {
+    return this.times.find(scheduleTime => {
+      const parsedTime = parse(time, 'HH:mm', this.date);
+      const parsedScheduleTime = parse(
+        scheduleTime.time,
+        'HH:mm:ss',
+        this.date,
+      );
+
+      return isEqual(parsedTime, parsedScheduleTime);
+    });
+  }
+
   static findAvailables({
     doctor,
     speciality,
@@ -69,6 +82,12 @@ class Schedule extends BaseEntity {
     return query.getMany();
   }
 
+  static findOneAvailableById(id: number): Promise<Schedule | undefined> {
+    return this.getAvailblesQuery()
+      .andWhere('schedule.id = :id', { id })
+      .getOne();
+  }
+
   static getAvailblesQuery(): SelectQueryBuilder<Schedule> {
     const today = new Date();
 
@@ -87,7 +106,10 @@ class Schedule extends BaseEntity {
           minDateTime,
         },
       )
-      .orderBy({ 'schedule.date': 'ASC' });
+      .orderBy({
+        'schedule.date': 'ASC',
+        'time.time': 'ASC',
+      });
   }
 }
 

@@ -1,3 +1,4 @@
+import { classToPlain } from 'class-transformer';
 import { Router } from 'express';
 import CreateUserDto from '../dtos/CreateUserDto';
 import CreateUserService from '../services/CreateUserService';
@@ -14,10 +15,7 @@ usersRouter.post('/', async (request, response) => {
   const userService = new CreateUserService();
   const user = await userService.execute({ name, email, password });
 
-  delete user.password;
-  delete user.lastLogin;
-
-  return response.status(201).json(user);
+  return response.status(201).json(classToPlain(user));
 });
 
 export default usersRouter;

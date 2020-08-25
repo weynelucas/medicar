@@ -30,7 +30,7 @@ class AuthenticateUserService {
 
     await user.updateLastLogin();
 
-    const token = sign({ isAdmin: user.isAdmin }, authConfig.jwt.secretKey, {
+    const token = sign({}, authConfig.jwt.secretKey, {
       subject: user.id.toString(),
       expiresIn: '1d',
     });

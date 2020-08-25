@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import isAuthenticated from '../middlewares/isAuthenticated';
+import appointmentsRouter from './appointments.routes';
 import doctorsRouter from './doctors.routes';
 import schedulesRouter from './schedules.routes';
 import sessionsRouter from './sessions.routes';
@@ -14,5 +15,6 @@ routes.use(isAuthenticated);
 routes.use('/specialities', specialitiesRouter);
 routes.use('/doctors', doctorsRouter);
 routes.use('/schedules', schedulesRouter);
+routes.use('/appointments', appointmentsRouter);
 
 export default routes;

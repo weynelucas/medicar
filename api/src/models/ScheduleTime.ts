@@ -14,7 +14,7 @@ class ScheduleTime extends BaseEntity {
   id: number;
 
   @Column('time')
-  time: Date;
+  time: string;
 
   @Column({ name: 'is_available' })
   isAvaialble: boolean;
@@ -25,6 +25,16 @@ class ScheduleTime extends BaseEntity {
   @ManyToOne(() => Schedule, schedule => schedule.times)
   @JoinColumn({ name: 'schedule_id' })
   schedule: Schedule;
+
+  public async disable() {
+    this.isAvaialble = false;
+    await this.save();
+  }
+
+  public async enable() {
+    this.isAvaialble = true;
+    await this.save();
+  }
 }
 
 export default ScheduleTime;

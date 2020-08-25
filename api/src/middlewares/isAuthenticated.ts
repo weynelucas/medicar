@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 import authConfig from '../config/auth';
 import { AuthenticationFailed } from '../errors/apiErrors';
+import User from '../models/User';
 
 interface TokenPayload {
   iat: number;
@@ -10,11 +11,11 @@ interface TokenPayload {
   isAdmin: boolean;
 }
 
-function isAuthenticated(
+async function isAuthenticated(
   request: Request,
   response: Response,
   next: NextFunction,
-): void {
+): Promise<void> {
   const { authorization = '' } = request.headers;
   const authorizationParts = authorization.split(' ');
 
@@ -35,9 +36,14 @@ function isAuthenticated(
   try {
     const decoded = verify(token, authConfig.jwt.secretKey);
 
-    const { sub, isAdmin } = decoded as TokenPayload;
+    const { sub } = decoded as TokenPayload;
 
-    request.user = { id: sub, isAdmin };
+    const user = await User.findOne(sub);
+    if (!user) {
+      throw new Error();
+    }
+
+    request.user = user;
 
     return next();
   } catch {

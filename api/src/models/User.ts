@@ -1,4 +1,5 @@
 import { hash } from 'bcryptjs';
+import { Exclude, Expose } from 'class-transformer';
 import {
   BaseEntity,
   Column,
@@ -20,6 +21,7 @@ class User extends BaseEntity {
   @Column()
   email: string;
 
+  @Exclude()
   @Column()
   password: string;
 
@@ -29,9 +31,11 @@ class User extends BaseEntity {
   @Column({ name: 'last_login', nullable: true })
   lastLogin?: Date;
 
+  @Expose({ name: 'dateJoined' })
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
