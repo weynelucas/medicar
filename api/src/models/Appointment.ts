@@ -77,12 +77,20 @@ class Appointment extends BaseEntity {
       .getOne();
   }
 
-  static findAvaiablesByUser(userId: number): Promise<Appointment[]> {
+  static findAvailablesByUser(userId: number): Promise<Appointment[]> {
     return this.getAvailblesQuery()
-      .andWhere('appointment.user_id = :userId', {
-        userId,
-      })
+      .andWhere('appointment.user_id = :userId', { userId })
       .getMany();
+  }
+
+  static findOneAvailableByUserAndId(
+    userId: number,
+    id: number | string,
+  ): Promise<Appointment | undefined> {
+    return this.getAvailblesQuery()
+      .andWhere('appointment.user_id = :userId', { userId })
+      .andWhere('appointment.id = :id', { id })
+      .getOne();
   }
 
   static getAvailblesQuery(): SelectQueryBuilder<Appointment> {
