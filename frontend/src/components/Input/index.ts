@@ -6,6 +6,10 @@ const Input = styled.input`
   border-radius: 4px;
   padding: 13px 8px 12px 8px;
 
+  &:focus {
+    border: 1px solid ${colors.primary};
+  }
+
   &::placeholder {
     color: ${colors.gray};
   }

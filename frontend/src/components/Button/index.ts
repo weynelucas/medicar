@@ -30,16 +30,26 @@ const getVariantStyle = ({ variant = 'primary' }: ButtonProps) => {
         color: ${colors.white};
         background-color: ${colors.primary};
 
-        &:hover {
+        &:hover:not(:disabled) {
           background-color: ${colors.primaryHover};
+        }
+
+        &:disabled {
+          background-color: ${colors.secondaryHover};
+          cursor: not-allowed;
         }
       `
     : css`
         color: ${colors.primary};
         background-color: ${colors.white};
 
-        &:hover {
+        &:hover:not(:disabled) {
           background-color: ${colors.secondaryHover};
+        }
+
+        &:disabled {
+          color: ${colors.secondaryHover};
+          cursor: not-allowed;
         }
       `;
 };
