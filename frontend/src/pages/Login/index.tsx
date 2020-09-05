@@ -1,4 +1,10 @@
-import React, { FormEvent, useEffect, useMemo, useState } from 'react';
+import React, {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useHistory } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
 import Button from '../../components/Button';
@@ -23,29 +29,31 @@ const Login: React.FC = () => {
     setLoginError('');
   }, [email, password]);
 
-  function handleSignUp() {
+  const handleSignUp = useCallback(() => {
     history.push('/signup');
-  }
+  }, [history]);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    try {
-      event.preventDefault();
+  const handleSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      try {
+        event.preventDefault();
 
-      setLoginError('');
-      setLoading(true);
+        setLoginError('');
+        setLoading(true);
 
-      await login({ email, password });
-      history.push('/dashboard');
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        setLoginError('E-mail e/ou senha incorretos.');
-      } else {
-        setLoginError('Não foi possível realizar o login.');
+        await login({ email, password });
+      } catch (err) {
+        if (err.response && err.response.status === 401) {
+          setLoginError('E-mail e/ou senha incorretos.');
+        } else {
+          setLoginError('Não foi possível realizar o login.');
+        }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  }
+    },
+    [email, password, login],
+  );
 
   return (
     <Container>
