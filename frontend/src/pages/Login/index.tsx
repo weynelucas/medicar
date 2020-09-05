@@ -70,7 +70,7 @@ const Login: React.FC = () => {
         />
 
         <FormActions>
-          <Button variant="secondary" onClick={handleSignUp}>
+          <Button type="button" variant="secondary" onClick={handleSignUp}>
             Criar Conta
           </Button>
           <Button type="submit" loading={loading} disabled={!isValidLoginForm}>
