@@ -1,4 +1,4 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Transform } from 'class-transformer';
 import { format, startOfSecond } from 'date-fns';
 import {
   BaseEntity,
@@ -40,6 +40,7 @@ class Appointment extends BaseEntity {
   schedule: Schedule;
 
   @Column('time')
+  @Transform((value: string) => value.substring(0, 5))
   time: string;
 
   @Exclude()

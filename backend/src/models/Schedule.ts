@@ -37,7 +37,9 @@ class Schedule extends BaseEntity {
   doctor: Doctor;
 
   @Expose({ toPlainOnly: true })
-  @Transform((value: ScheduleTime[]) => value.map(time => time.time))
+  @Transform((value: ScheduleTime[]) =>
+    value.map(time => time.time.substring(0, 5)),
+  )
   @OneToMany(() => ScheduleTime, scheduleTime => scheduleTime.schedule)
   times: ScheduleTime[];
 
