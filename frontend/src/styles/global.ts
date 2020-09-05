@@ -10,6 +10,10 @@ export default createGlobalStyle`
     box-sizing: border-box;
   }
 
+  html, body, #root {
+    height: 100%;
+  }
+
   body {
     -webkit-font-smoothing: antialiased;
   }
@@ -25,11 +29,5 @@ export default createGlobalStyle`
 
   a {
     text-decoration: none;
-  }
-
-  #root {
-    max-width: 630px;
-    margin: 0 auto;
-    padding: 20px;
   }
 `;

@@ -6,4 +6,6 @@ export default {
   white: '#ffffff',
   gray: '#a8a8a8',
   grayLight: '#f8f8f8',
+  danger: '#da1414',
+  dangerLight: '#feefef',
 };
