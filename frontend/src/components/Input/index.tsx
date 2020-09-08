@@ -5,14 +5,16 @@ import React, {
   useCallback,
   useState,
 } from 'react';
+import { IconType } from 'react-icons/lib';
 import { Container, InputContainer } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
+  icon?: IconType;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ value, label, onFocus, onBlur, ...rest }, inputRef) => {
+  ({ value, label, icon: Icon, onFocus, onBlur, ...rest }, inputRef) => {
     const [active, setActive] = useState(() => {
       if (value) {
         return value.toString().length > 0;
@@ -53,6 +55,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {...rest}
         />
         {label && <label>{label}</label>}
+        {Icon && <Icon size={19} />}
       </Container>
     );
   },

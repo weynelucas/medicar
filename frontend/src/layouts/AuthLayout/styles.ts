@@ -14,14 +14,14 @@ export const Container = styled.div`
     margin-bottom: 20px;
     align-self: flex-start;
   }
-`;
 
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
+  form {
+    display: flex;
+    flex-direction: column;
 
-  input {
-    margin-top: 20px;
+    input {
+      margin-top: 20px;
+    }
   }
 `;
 
