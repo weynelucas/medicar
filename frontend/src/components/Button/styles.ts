@@ -18,8 +18,8 @@ const normalSizeStyle = css`
 const smallSizeStyle = css`
   font-weight: normal;
   font-size: 13px;
-  min-width: 120px;
-  padding: 5px;
+  min-width: 138px;
+  padding: 6px 12px;
   border-radius: 4px;
 `;
 
@@ -27,8 +27,7 @@ const primaryVariantStyle = css`
   color: ${colors.white};
   background-color: ${colors.primary};
 
-  &:hover:not(:disabled),
-  &:focus {
+  &:hover:not(:disabled) {
     background-color: ${colors.primaryHover};
   }
 
@@ -40,7 +39,7 @@ const primaryVariantStyle = css`
 
 const secondaryVariantStyle = css`
   color: ${colors.primary};
-  background-color: ${colors.white};
+  background-color: transparent;
 
   &:hover:not(:disabled),
   &:focus {
@@ -75,9 +74,8 @@ export const ButtonContainer = styled.button<ButtonProps>`
   ${getSizeStyle}
   ${getVariantStyle}
 
-  svg {
-    animation: ${rotate} 1s linear;
-    animation-iteration-count: infinite;
+  svg:first-child {
+    margin-right: 14px;
   }
 `;
 

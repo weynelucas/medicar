@@ -48,7 +48,7 @@ const Login: React.FC = () => {
         } else {
           setLoginError('Não foi possível realizar o login.');
         }
-      } finally {
+
         setLoading(false);
       }
     },

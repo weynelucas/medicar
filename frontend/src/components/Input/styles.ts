@@ -15,7 +15,7 @@ export const Container = styled.div<InputProps>`
     color: ${colors.gray};
     background-color: ${colors.white};
     position: absolute;
-    bottom: 12px;
+    bottom: 15px;
     left: 8px;
     transition: all 0.2s ease-in-out;
     ${props =>
@@ -30,7 +30,7 @@ export const Container = styled.div<InputProps>`
 export const InputContainer = styled.input`
   border: 1px solid ${colors.gray};
   border-radius: 4px;
-  padding: 13px 8px 12px 8px;
+  padding: 15px 8px;
 
   &:focus {
     border: 1px solid ${colors.primary};

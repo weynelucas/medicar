@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import User from '../models/User';
-import { api } from '../services/api';
+import api from '../services/api';
 
 type LoginResponse = { user: User; token: string };
 
@@ -28,19 +28,20 @@ export const AuthContext = createContext<AuthContextData>(
 );
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem('Medicar@auth_user');
-
-    return storedUser && JSON.parse(storedUser);
-  });
-
-  const [token, setToken] = useState<string | null>(() =>
-    localStorage.getItem('Medicar@auth_token'),
-  );
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   const isSignedIn = useMemo(() => {
     return user !== null;
   }, [user]);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('Medicar@auth_user');
+    const storedToken = localStorage.getItem('Medicar@auth_token');
+
+    setToken(storedToken);
+    setUser(storedUser && JSON.parse(storedUser));
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -52,9 +53,11 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      localStorage.setItem('Medicar@auth_token', JSON.stringify(token));
+      localStorage.setItem('Medicar@auth_token', token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
       localStorage.removeItem('Medicar@auth_token');
+      delete api.defaults.headers.authorization;
     }
   }, [token]);
 
@@ -66,13 +69,13 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     const { user, token } = response.data;
 
-    setUser(user);
     setToken(token);
+    setUser(user);
   }
 
   function logout() {
-    setUser(null);
     setToken(null);
+    setUser(null);
   }
 
   return (
