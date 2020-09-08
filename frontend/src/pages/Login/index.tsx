@@ -7,10 +7,11 @@ import React, {
 } from 'react';
 import { useHistory } from 'react-router-dom';
 import logo from '../../assets/logo.svg';
+import Alert from '../../components/Alert';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { useAuth } from '../../context/auth';
-import { Alert, Container, Form, FormActions } from './styles';
+import { Container, Form, FormActions } from './styles';
 
 const Login: React.FC = () => {
   const { login } = useAuth();

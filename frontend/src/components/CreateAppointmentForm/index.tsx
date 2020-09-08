@@ -143,6 +143,7 @@ const CreateAppointmentForm: React.FC<CreateAppointmentFormProps> = ({
         {creationError && <Alert>{creationError}</Alert>}
 
         <SelectInput
+          required
           placeholder="Especialidade"
           name="speciality"
           disabled={!specialityField.options.length}
@@ -151,6 +152,7 @@ const CreateAppointmentForm: React.FC<CreateAppointmentFormProps> = ({
         />
 
         <SelectInput
+          required
           placeholder="Médico"
           name="doctor"
           disabled={!doctorField.options.length}
@@ -159,14 +161,18 @@ const CreateAppointmentForm: React.FC<CreateAppointmentFormProps> = ({
         />
 
         <SelectInput
+          required
           placeholder="Data"
+          name="schedule"
           disabled={!scheduleField.options.length}
           options={scheduleField.options}
           onChange={scheduleField.handleChange}
         />
 
         <SelectInput
+          required
           placeholder="Horário"
+          name="time"
           disabled={!timeField.options.length}
           options={timeField.options}
           onChange={timeField.handleChange}

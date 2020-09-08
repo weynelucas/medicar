@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
-import { SelectContainer, SelectPlaceholder } from './styles';
+import { FaAngleDown } from 'react-icons/fa';
+import { Container, SelectContainer } from './styles';
 
 export interface SelectOption {
   value: string | number;
@@ -17,16 +18,17 @@ const SelectInput: React.RefForwardingComponent<
   SelectInputProps
 > = ({ placeholder, options = [], ...rest }, inputRef) => {
   return (
-    <SelectContainer ref={inputRef} {...rest}>
-      {placeholder && (
-        <SelectPlaceholder value="">{placeholder}</SelectPlaceholder>
-      )}
-      {options.map(({ value, label }) => (
-        <option key={value} value={value}>
-          {label}
-        </option>
-      ))}
-    </SelectContainer>
+    <Container>
+      <FaAngleDown size={17} />
+      <SelectContainer ref={inputRef} {...rest}>
+        {placeholder && <option value="">{placeholder}</option>}
+        {options.map(({ value, label }) => (
+          <option key={value} value={value}>
+            {label}
+          </option>
+        ))}
+      </SelectContainer>
+    </Container>
   );
 };
 
