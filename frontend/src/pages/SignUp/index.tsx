@@ -4,7 +4,7 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useState
+  useState,
 } from 'react';
 import { FaEye } from 'react-icons/fa';
 import { useHistory } from 'react-router-dom';
@@ -19,7 +19,7 @@ interface FormData {
   name: string;
   email: string;
   password: string;
-  passwordConfirmation: string;
+  passwordConfirm: string;
 }
 
 const SignUp: React.FC = () => {
@@ -30,7 +30,7 @@ const SignUp: React.FC = () => {
     name: '',
     email: '',
     password: '',
-    passwordConfirmation: '',
+    passwordConfirm: '',
   });
   const [signUpError, setSignUpError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -67,9 +67,7 @@ const SignUp: React.FC = () => {
   }, [history]);
 
   const isValidSignUpForm = useMemo(() => {
-    const { name, email, password, passwordConfirmation } = data;
-
-    return Boolean(name && email && password && passwordConfirmation);
+    return Object.values(data).every(value => Boolean(value));
   }, [data]);
 
   useEffect(() => {
@@ -104,7 +102,7 @@ const SignUp: React.FC = () => {
         />
         <Input
           required
-          name="passwordConfirmation"
+          name="passwordConfirm"
           type="password"
           label="Confirmar senha"
           onChange={handleInputChange}

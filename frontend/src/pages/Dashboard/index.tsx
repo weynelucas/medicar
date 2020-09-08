@@ -9,6 +9,8 @@ import Appointment from '../../models/Appointment';
 import api from '../../services/api';
 import { Box, BoxHeader, Container, ModalStyle } from './styles';
 
+Modal.setAppElement('#root');
+
 function getAppointmentDate(appointment: Appointment): Date {
   const [hours, minutes] = appointment.time.split(':');
   const date = new Date(appointment.date);

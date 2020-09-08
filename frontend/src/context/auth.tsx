@@ -1,5 +1,6 @@
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -19,7 +20,7 @@ interface SignupCredentials {
   name: string;
   email: string;
   password: string;
-  passwordConfirmation: string;
+  passwordConfirm: string;
 }
 
 interface AuthContextData {
@@ -39,9 +40,73 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
+  const login = useCallback(async ({ email, password }: LoginCredentials) => {
+    try {
+      const response = await api.post<LoginResponse>('login/', {
+        email,
+        password,
+      });
+
+      const { user, token } = response.data;
+
+      setToken(token);
+      setUser(user);
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        throw new Error('E-mail e/ou senha incorretos.');
+      }
+
+      throw new Error('Não foi possível realizar o login.');
+    }
+  }, []);
+
+  const signUp = useCallback(
+    async ({ name, email, password, passwordConfirm }: SignupCredentials) => {
+      if (password !== passwordConfirm) {
+        throw new Error('Os dois campos de senha não combinam.');
+      }
+
+      try {
+        const { data: user } = await api.post<User>('users/', {
+          name,
+          email,
+          password,
+        });
+
+        await login({ email: user.email, password });
+      } catch (err) {
+        if (err.response && err.response.status === 409) {
+          const { detail } = err.response.data;
+          throw new Error(detail);
+        }
+
+        throw new Error('Não foi possível criar a conta.');
+      }
+    },
+    [login],
+  );
+
+  const logout = useCallback(() => {
+    setToken(null);
+    setUser(null);
+  }, []);
+
   const isSignedIn = useMemo(() => {
     return user !== null;
   }, [user]);
+
+  const _configInterceptors = useCallback(() => {
+    api.interceptors.response.use(
+      response => response,
+      error => {
+        if (isSignedIn && error.response.status === 401) {
+          logout();
+        }
+
+        return Promise.reject(error);
+      },
+    );
+  }, [isSignedIn, logout]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('Medicar@auth_user');
@@ -50,6 +115,10 @@ export const AuthProvider: React.FC = ({ children }) => {
     setToken(storedToken);
     setUser(storedUser && JSON.parse(storedUser));
   }, []);
+
+  useEffect(() => {
+    _configInterceptors();
+  }, [_configInterceptors]);
 
   useEffect(() => {
     if (user) {
@@ -68,59 +137,6 @@ export const AuthProvider: React.FC = ({ children }) => {
       delete api.defaults.headers.authorization;
     }
   }, [token]);
-
-  async function login({ email, password }: LoginCredentials) {
-    try {
-      const response = await api.post<LoginResponse>('login/', {
-        email,
-        password,
-      });
-
-      const { user, token } = response.data;
-
-      setToken(token);
-      setUser(user);
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        throw new Error('E-mail e/ou senha incorretos.');
-      }
-
-      throw new Error('Não foi possível realizar o login.');
-    }
-  }
-
-  async function signUp({
-    name,
-    email,
-    password,
-    passwordConfirmation,
-  }: SignupCredentials) {
-    if (password !== passwordConfirmation) {
-      throw new Error('Os dois campos de senha não combinam.');
-    }
-
-    try {
-      const { data: user } = await api.post<User>('users/', {
-        name,
-        email,
-        password,
-      });
-
-      await login({ email: user.email, password });
-    } catch (err) {
-      if (err.response && err.response.status === 409) {
-        const { detail } = err.response.data;
-        throw new Error(detail);
-      }
-
-      throw new Error('Não foi possível criar a conta.');
-    }
-  }
-
-  function logout() {
-    setToken(null);
-    setUser(null);
-  }
 
   return (
     <AuthContext.Provider
