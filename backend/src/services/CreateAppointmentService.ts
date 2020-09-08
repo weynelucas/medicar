@@ -15,12 +15,12 @@ class CreateAppointmentService {
   }: Request): Promise<Appointment> {
     const schedule = await Schedule.findOneAvailableById(scheduleId);
     if (!schedule) {
-      throw new ServiceError('There is no available schedule found.');
+      throw new ServiceError('Agenda não encontrada.');
     }
 
     const scheduleTime = schedule.getScheduleTime(time);
     if (!scheduleTime) {
-      throw new ServiceError('There is no available schedule for this time.');
+      throw new ServiceError('Não há horário disponível para essa agenda.');
     }
 
     const appointmentOnSameDate = await Appointment.findOneByUserAndDate(
@@ -31,7 +31,7 @@ class CreateAppointmentService {
 
     if (appointmentOnSameDate) {
       throw new ServiceError(
-        `You already scheduled for an appointment at this date.`,
+        'Você já tem uma consulta marcada para esta mesma data e horário.',
       );
     }
 

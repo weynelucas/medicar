@@ -14,7 +14,9 @@ class CreateDoctorService {
   public async execute({ specialityId, ...rest }: Request): Promise<Doctor> {
     const speciality = await Speciality.findOne(specialityId);
     if (!speciality) {
-      throw new ServiceError(`Speciality with id=${specialityId} not found.`);
+      throw new ServiceError(
+        `Especialidade de id=${specialityId} não encontrada.`,
+      );
     }
 
     const doctor = Doctor.create({ ...rest, speciality });

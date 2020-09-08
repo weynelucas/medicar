@@ -16,14 +16,16 @@ class CreateScheduleService {
       relations: ['speciality'],
     });
     if (!doctor) {
-      throw new ServiceError(`Doctor with id=${doctorId} not found.`);
+      throw new ServiceError(`Médico de id=${doctorId} não encontrado.`);
     }
 
     const today = new Date();
     const parsedDate = startOfDay(parseISO(date));
 
     if (isBefore(parsedDate, startOfDay(today))) {
-      throw new ServiceError('Cannot create schedules for past dates.');
+      throw new ServiceError(
+        'Não é possível criar agendas para datas passadas.',
+      );
     }
 
     const isDoctorAlreadyScheduled = await Schedule.findOne({
@@ -33,7 +35,7 @@ class CreateScheduleService {
 
     if (isDoctorAlreadyScheduled) {
       throw new ServiceError(
-        `Doctor ${doctor.name} is already scheduled for this date.`,
+        `O médico ${doctor.name} já está agendado para esta mesma data.`,
       );
     }
 
@@ -49,7 +51,7 @@ class CreateScheduleService {
 
     if (isSomeTimePast) {
       throw new ServiceError(
-        'Cannot create schedules for past times for this date.',
+        'Não é possível criar agendas para horários passados.',
       );
     }
 

@@ -14,7 +14,9 @@ class CreateUserService {
     });
 
     if (emailAlreadyUsed) {
-      throw new ServiceError('E-mail address already used.');
+      throw new ServiceError(
+        'Já existe um usuário cadastrado com este endereço de e-mail.',
+      );
     }
 
     const user = User.create({ name, email });
