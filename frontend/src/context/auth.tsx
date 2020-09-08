@@ -15,12 +15,20 @@ interface LoginCredentials {
   password: string;
 }
 
+interface SignupCredentials {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+}
+
 interface AuthContextData {
   user: User | null;
   token: string | null;
   isSignedIn: boolean;
   login(credentials: LoginCredentials): Promise<void>;
   logout(): void;
+  signUp(credentials: SignupCredentials): Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextData>(
@@ -62,15 +70,51 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, [token]);
 
   async function login({ email, password }: LoginCredentials) {
-    const response = await api.post<LoginResponse>('login/', {
-      email,
-      password,
-    });
+    try {
+      const response = await api.post<LoginResponse>('login/', {
+        email,
+        password,
+      });
 
-    const { user, token } = response.data;
+      const { user, token } = response.data;
 
-    setToken(token);
-    setUser(user);
+      setToken(token);
+      setUser(user);
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        throw new Error('E-mail e/ou senha incorretos');
+      }
+
+      throw new Error('Não foi possível realizar o login');
+    }
+  }
+
+  async function signUp({
+    name,
+    email,
+    password,
+    passwordConfirmation,
+  }: SignupCredentials) {
+    if (password !== passwordConfirmation) {
+      throw new Error('Os dois campos de senha não combinam');
+    }
+
+    try {
+      const { data: user } = await api.post<User>('users/', {
+        name,
+        email,
+        password,
+      });
+
+      await login({ email: user.email, password });
+    } catch (err) {
+      if (err.response && err.response.status === 409) {
+        const { detail } = err.response.data;
+        throw new Error(detail);
+      }
+
+      throw new Error('Não foi possível criar a conta');
+    }
   }
 
   function logout() {
@@ -79,7 +123,9 @@ export const AuthProvider: React.FC = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, isSignedIn, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, token, isSignedIn, login, logout, signUp }}
+    >
       {children}
     </AuthContext.Provider>
   );

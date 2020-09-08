@@ -25,6 +25,13 @@ export const Container = styled.div<InputProps>`
         padding: 0 6px 0 2px;
       `};
   }
+
+  svg {
+    position: absolute;
+    bottom: 15px;
+    right: 8px;
+    color: ${colors.gray};
+  }
 `;
 
 export const InputContainer = styled.input`
