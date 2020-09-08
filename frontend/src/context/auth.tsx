@@ -82,10 +82,10 @@ export const AuthProvider: React.FC = ({ children }) => {
       setUser(user);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        throw new Error('E-mail e/ou senha incorretos');
+        throw new Error('E-mail e/ou senha incorretos.');
       }
 
-      throw new Error('Não foi possível realizar o login');
+      throw new Error('Não foi possível realizar o login.');
     }
   }
 
@@ -96,7 +96,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     passwordConfirmation,
   }: SignupCredentials) {
     if (password !== passwordConfirmation) {
-      throw new Error('Os dois campos de senha não combinam');
+      throw new Error('Os dois campos de senha não combinam.');
     }
 
     try {
@@ -113,7 +113,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         throw new Error(detail);
       }
 
-      throw new Error('Não foi possível criar a conta');
+      throw new Error('Não foi possível criar a conta.');
     }
   }
 
